@@ -3,29 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Majalah Digital Masa Depan</title>
+    
+    <title>Tamsar AI Blog - Update Tren Teknologi & AI Terkini</title>
+    <meta name="description" content="Portal berita teknologi otomatis yang menyajikan analisis mendalam tentang AI, Gadget, dan Tren Digital Masa Depan setiap hari.">
+    <meta name="keywords" content="Teknologi, AI, Kecerdasan Buatan, Tren Digital 2026, Berita Gadget, Tamsar AI">
+    <meta name="author" content="Tamsar811">
+    <meta name="robots" content="index, follow">
+
+    <meta property="og:title" content="Tamsar AI Blog - Update Tren Teknologi Terkini">
+    <meta property="og:description" content="Baca analisis teknologi terdalam yang dibuat otomatis oleh AI canggih.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://techvanguard-ai.netlify.app">
+    
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sakura.css/css/sakura.css" type="text/css">
     <style>
-        body { background-color: #f4f7f6; max-width: 900px; }
-        .card { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h1 { color: #2c3e50; text-align: center; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
-        footer { text-align: center; margin-top: 50px; font-size: 0.8em; color: #7f8c8d; }
+        body { background-color: #f4f7f6; max-width: 900px; line-height: 1.8; }
+        .card { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        h1 { color: #2c3e50; text-align: center; font-weight: 800; border-bottom: 4px solid #3498db; padding-bottom: 15px; }
+        footer { text-align: center; margin-top: 50px; padding: 20px; font-size: 0.9em; color: #7f8c8d; border-top: 1px solid #ddd; }
+        img { max-width: 100%; height: auto; border-radius: 12px; }
     </style>
 </head>
 <body>
-    <h1>TAMSAR AI BLOG</h1>
-    <div class="card">
-        <div id="content">Sedang meracik konten berkualitas tinggi...</div>
-    </div>
-    <footer>© 2026 Blog Otomatis By Tamsar811</footer>
+    <header>
+        <h1>TAMSAR AI BLOG</h1>
+        <p style="text-align:center; font-style:italic;">Wawasan Masa Depan, Ditulis Oleh Kecerdasan Buatan</p>
+    </header>
+
+    <main class="card">
+        <article id="content">
+            <p>Menghubungkan ke pusat data... Artikel sedang dimuat...</p>
+        </article>
+    </main>
+
+    <footer>
+        <p>© 2026 <b>Tamsar AI Blog</b> - Semua konten dibuat secara otomatis untuk tujuan edukasi teknologi.</p>
+    </footer>
 
     <script>
         fetch('artikel/konten-terbaru.md')
             .then(res => res.text())
             .then(data => {
                 document.getElementById('content').innerHTML = data;
+            })
+            .catch(err => {
+                document.getElementById('content').innerHTML = "Gagal memuat konten. Pastikan robot sudah berjalan.";
             });
     </script>
 </body>
 </html>
-
