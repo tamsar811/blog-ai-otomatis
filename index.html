@@ -2,24 +2,28 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Blog AI Otomatis</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Majalah Digital Masa Depan</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sakura.css/css/sakura.css" type="text/css">
     <style>
-        body { font-family: sans-serif; max-width: 700px; margin: 40px auto; padding: 20px; line-height: 1.6; color: #333; }
-        .artikel-box { border: 1px solid #ddd; padding: 20px; border-radius: 8px; background: #fafafa; }
+        body { background-color: #f4f7f6; max-width: 900px; }
+        .card { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; text-align: center; border-bottom: 3px solid #3498db; padding-bottom: 10px; }
+        footer { text-align: center; margin-top: 50px; font-size: 0.8em; color: #7f8c8d; }
     </style>
 </head>
 <body>
-    <h1>Update Tren Hari Ini</h1>
-    <div id="content" class="artikel-box">Memuat konten terbaru...</div>
+    <h1>TAMSAR AI BLOG</h1>
+    <div class="card">
+        <div id="content">Sedang meracik konten berkualitas tinggi...</div>
+    </div>
+    <footer>© 2026 Blog Otomatis By Tamsar811</footer>
 
     <script>
-        // Mengambil file MD yang baru saja berhasil dibuat oleh bot.py
         fetch('artikel/konten-terbaru.md')
-            .then(response => response.text())
+            .then(res => res.text())
             .then(data => {
-                // Menampilkan isi artikel setelah metadata ---
-                const parts = data.split('---');
-                document.getElementById('content').innerHTML = parts.length > 2 ? parts[2] : data;
+                document.getElementById('content').innerHTML = data;
             });
     </script>
 </body>
