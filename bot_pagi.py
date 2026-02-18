@@ -27,7 +27,10 @@ def jalan():
         judul = baris[0]
         konten = '\n\n'.join(baris[1:]) # Menggabungkan semua sisa baris agar tidak ada yang hilang
 
-        img_url = f"https://loremflickr.com/800/450/technology,trending?random={int(time.time())}"
+                # Menggunakan judul sebagai kata kunci gambar agar lebih relevan dan dikunci (lock)
+        keyword = judul.split()[0] # Ambil kata pertama dari judul
+        img_url = f"https://loremflickr.com/800/450/{keyword},tech/all?lock={int(time.time())}"
+
 
         file_path = 'data.json'
         data = json.load(open(file_path)) if os.path.exists(file_path) else []

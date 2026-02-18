@@ -25,7 +25,9 @@ def jalan():
         judul = baris[0]
         konten = '\n\n'.join(baris[1:])
 
-        img_url = f"https://loremflickr.com/800/450/artificialintelligence,future?random={int(time.time())}"
+                keyword = judul.split()[0]
+        img_url = f"https://loremflickr.com/800/450/{keyword},future/all?lock={int(time.time())}"
+
 
         file_path = 'data.json'
         data = json.load(open(file_path)) if os.path.exists(file_path) else []
