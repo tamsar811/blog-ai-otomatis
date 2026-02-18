@@ -10,25 +10,30 @@
         body { font-family: 'Space Grotesk', sans-serif; background-color: #0f172a; color: #f8fafc; }
         .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
         .gradient-text { background: linear-gradient(90deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+        .category-btn.active { background: #38bdf8; color: #0f172a; font-weight: bold; }
     </style>
 </head>
-<body class="min-h-screen">
-    <nav class="glass sticky top-0 z-40 p-4 mb-8">
-        <div class="container mx-auto">
-            <h1 class="text-xl font-bold gradient-text text-center md:text-left">TECHVANGUARD AI</h1>
+<body>
+    <nav class="glass sticky top-0 z-40 p-4 shadow-xl">
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <h1 class="text-2xl font-bold gradient-text">TECHVANGUARD AI</h1>
+            <div id="categories" class="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+                <button onclick="filterPosts('All')" class="category-btn glass px-4 py-1 rounded-full text-sm active">Semua</button>
+                <button onclick="filterPosts('Viral')" class="category-btn glass px-4 py-1 rounded-full text-sm">Viral</button>
+                <button onclick="filterPosts('Teknologi')" class="category-btn glass px-4 py-1 rounded-full text-sm">Tekno</button>
+                <button onclick="filterPosts('Masa Depan')" class="category-btn glass px-4 py-1 rounded-full text-sm">Masa Depan</button>
+            </div>
         </div>
     </nav>
 
-    <main class="container mx-auto px-4 pb-20">
-        <div id="content" class="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
+    <main class="container mx-auto px-4 py-10">
+        <div id="content" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
     </main>
 
-    <div id="modal" class="fixed inset-0 bg-black/95 hidden z-50 overflow-y-auto p-4">
-        <div class="flex items-center justify-center min-h-screen">
-            <div class="glass max-w-3xl w-full p-8 pt-16 rounded-3xl relative shadow-2xl">
-                <button onclick="closeModal()" class="fixed top-6 right-6 md:absolute md:top-4 md:right-4 text-3xl text-slate-400 hover:text-white bg-slate-800/50 w-12 h-12 rounded-full z-[60]">&times;</button>
+    <div id="modal" class="fixed inset-0 bg-black/95 hidden z-50 overflow-y-auto">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="glass max-w-3xl w-full p-8 pt-16 rounded-3xl relative">
+                <button onclick="closeModal()" class="fixed top-6 right-6 text-3xl text-slate-400 bg-slate-800 w-12 h-12 rounded-full">&times;</button>
                 <div id="modal-body"></div>
             </div>
         </div>
@@ -37,31 +42,48 @@
     <script>
         let allPosts = [];
         async function init() {
-            const res = await fetch('data.json?v=' + Math.random());
-            allPosts = await res.json();
+            try {
+                const res = await fetch('data.json?v=' + Math.random());
+                allPosts = await res.json();
+                render(allPosts);
+            } catch(e) { console.log("Belum ada data."); }
+        }
+
+        function render(posts) {
             const container = document.getElementById('content');
             container.innerHTML = '';
-            [...allPosts].reverse().forEach((post, index) => {
-                const realIdx = allPosts.length - 1 - index;
+            [...posts].reverse().forEach((post) => {
                 container.innerHTML += `
-                    <div class="glass p-6 rounded-2xl flex flex-col h-full">
-                        <img src="${post.image}" class="w-full h-48 object-cover rounded-xl mb-4 shadow-lg">
-                        <span class="text-xs text-sky-400 font-bold uppercase tracking-widest">${post.tag} | ${post.date}</span>
-                        <h2 class="text-2xl font-bold my-3 flex-grow">${post.title}</h2>
-                        <button onclick="openModal(${realIdx})" class="w-full py-3 rounded-xl bg-sky-600 font-bold hover:bg-sky-500 transition-all">Baca Selengkapnya</button>
+                    <div class="glass p-5 rounded-3xl flex flex-col h-full border border-white/5 hover:border-sky-500/50 transition-all">
+                        <img src="${post.image}" class="w-full h-48 object-cover rounded-2xl mb-4 shadow-lg">
+                        <div class="flex justify-between items-center mb-3">
+                            <span class="px-3 py-1 bg-sky-500/10 text-sky-400 text-[10px] font-bold rounded-full uppercase">${post.category || 'INFO'}</span>
+                            <span class="text-[10px] text-slate-500">${post.date}</span>
+                        </div>
+                        <h2 class="text-xl font-bold mb-4 flex-grow">${post.title}</h2>
+                        <button onclick="openModalByTitle('${post.title.replace(/'/g, "\\'")}')" class="w-full py-3 rounded-xl bg-gradient-to-r from-sky-600 to-indigo-600 font-bold">Baca Artikel</button>
                     </div>`;
             });
         }
-        function openModal(idx) {
-            const post = allPosts[idx];
+
+        function filterPosts(cat) {
+            document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            if(cat === 'All') render(allPosts);
+            else render(allPosts.filter(p => p.category === cat));
+        }
+
+        function openModalByTitle(title) {
+            const post = allPosts.find(p => p.title === title);
             document.getElementById('modal-body').innerHTML = `
-                <img src="${post.image}" class="w-full h-64 md:h-80 object-cover rounded-2xl mb-6 shadow-2xl">
-                <h2 class="text-3xl font-bold mb-6 gradient-text leading-tight">${post.title}</h2>
+                <img src="${post.image}" class="w-full h-64 object-cover rounded-2xl mb-6">
+                <h2 class="text-3xl font-bold mb-6 gradient-text">${post.title}</h2>
                 <div class="text-slate-200 leading-relaxed whitespace-pre-wrap text-lg">${post.content}</div>
             `;
             document.getElementById('modal').classList.remove('hidden');
             document.body.style.overflow = 'hidden';
         }
+
         function closeModal() {
             document.getElementById('modal').classList.add('hidden');
             document.body.style.overflow = 'auto';
@@ -70,5 +92,3 @@
     </script>
 </body>
 </html>
-EOF
-git add index.html && git commit -m "Fix modal layout and text visibility" && git push
