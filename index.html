@@ -10,83 +10,58 @@
         body { font-family: 'Space Grotesk', sans-serif; background-color: #0f172a; color: #f8fafc; }
         .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
         .gradient-text { background: linear-gradient(90deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        #modal { transition: opacity 0.3s ease; }
     </style>
 </head>
 <body class="min-h-screen">
     <nav class="glass sticky top-0 z-40 p-4 mb-8">
         <div class="container mx-auto">
-            <h1 class="text-xl font-bold gradient-text">TECHVANGUARD AI</h1>
+            <h1 class="text-xl font-bold gradient-text text-center md:text-left">TECHVANGUARD AI</h1>
         </div>
     </nav>
 
     <main class="container mx-auto px-4 pb-20">
-        <div id="content" class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <p class="text-slate-500">Memuat artikel terbaru...</p>
-        </div>
+        <div id="content" class="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
     </main>
 
-    <div id="modal" class="fixed inset-0 bg-black/90 hidden z-50 overflow-y-auto pointer-events-auto">
-        <div class="min-h-screen flex items-center justify-center p-4">
-            <div class="glass max-w-3xl w-full p-8 rounded-3xl relative">
-                <button onclick="closeModal()" class="absolute top-4 right-4 text-3xl text-slate-400 hover:text-white">&times;</button>
-                <div id="modal-body"></div>
-            </div>
+    <div id="modal" class="fixed inset-0 bg-black/90 hidden z-50 overflow-y-auto p-4 flex items-center justify-center">
+        <div class="glass max-w-3xl w-full p-8 rounded-3xl relative">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-3xl text-slate-400 hover:text-white">&times;</button>
+            <div id="modal-body"></div>
         </div>
     </div>
 
     <script>
         let allPosts = [];
-
         async function init() {
-            try {
-                // Tambahkan random parameter supaya tidak terkena cache browser
-                const res = await fetch('data.json?v=' + Math.random());
-                allPosts = await res.json();
-                render();
-            } catch (e) {
-                document.getElementById('content').innerHTML = "Gagal memuat konten.";
-            }
-        }
-
-        function render() {
+            const res = await fetch('data.json?v=' + Math.random());
+            allPosts = await res.json();
             const container = document.getElementById('content');
             container.innerHTML = '';
-            // Urutan dari yang terbaru (reverse)
             [...allPosts].reverse().forEach((post, index) => {
-                // Cari index asli karena kita pakai reverse
-                const originalIndex = allPosts.length - 1 - index;
+                const realIdx = allPosts.length - 1 - index;
                 container.innerHTML += `
-                    <div class="glass p-6 rounded-2xl flex flex-col justify-between">
-                        <div>
-                            <span class="text-xs text-sky-400 font-bold uppercase tracking-widest">${post.date}</span>
-                            <h2 class="text-2xl font-bold my-3 leading-tight">${post.title}</h2>
-                            <p class="text-slate-400 text-sm line-clamp-3 mb-6">${post.content}</p>
-                        </div>
-                        <button onclick="openModal(${originalIndex})" class="w-full py-3 rounded-xl bg-sky-600 hover:bg-sky-500 transition shadow-lg shadow-sky-900/20 font-bold">
-                            Baca Selengkapnya
-                        </button>
-                    </div>
-                `;
+                    <div class="glass p-6 rounded-2xl">
+                        <img src="${post.image}" class="w-full h-48 object-cover rounded-xl mb-4 shadow-lg">
+                        <span class="text-xs text-sky-400 font-bold uppercase">${post.tag} | ${post.date}</span>
+                        <h2 class="text-2xl font-bold my-3">${post.title}</h2>
+                        <button onclick="openModal(${realIdx})" class="w-full py-3 rounded-xl bg-sky-600 font-bold hover:bg-sky-500">Baca Selengkapnya</button>
+                    </div>`;
             });
         }
-
-        window.openModal = function(idx) {
+        function openModal(idx) {
             const post = allPosts[idx];
             document.getElementById('modal-body').innerHTML = `
-                <span class="text-sky-400 text-sm">${post.date}</span>
-                <h2 class="text-3xl font-bold mt-2 mb-6 gradient-text">${post.title}</h2>
-                <div class="text-slate-300 leading-relaxed text-lg whitespace-pre-wrap">${post.content}</div>
+                <img src="${post.image}" class="w-full h-64 object-cover rounded-2xl mb-6 shadow-2xl">
+                <h2 class="text-3xl font-bold mb-4 gradient-text">${post.title}</h2>
+                <div class="text-slate-300 leading-relaxed whitespace-pre-wrap">${post.content}</div>
             `;
             document.getElementById('modal').classList.remove('hidden');
-            document.body.style.overflow = 'hidden'; // Kunci scroll layar utama
+            document.body.style.overflow = 'hidden';
         }
-
-        window.closeModal = function() {
+        function closeModal() {
             document.getElementById('modal').classList.add('hidden');
-            document.body.style.overflow = 'auto'; // Aktifkan kembali scroll
+            document.body.style.overflow = 'auto';
         }
-
         init();
     </script>
 </body>
