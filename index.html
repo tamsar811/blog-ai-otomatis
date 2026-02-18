@@ -1,55 +1,68 @@
+cat << 'EOF' > ~/blog-otomatis/index.html
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta name="google-site-verification" content="1c725a095311279a" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>TechVanguard AI - Update Tren Teknologi & AI Terkini</title>
-    <meta name="description" content="Portal berita teknologi otomatis yang menyajikan analisis mendalam tentang AI, Gadget, dan Tren Digital Masa Depan setiap hari.">
-    <meta name="keywords" content="Teknologi, AI, Kecerdasan Buatan, Tren Digital 2026, Berita Gadget, Tamsar AI">
-    <meta name="author" content="Tamsar811">
-    <meta name="robots" content="index, follow">
-
-    <meta property="og:title" content="TechVanguard AI - Update Tren Teknologi Terkini">
-    <meta property="og:description" content="Baca analisis teknologi terdalam yang dibuat otomatis oleh AI canggih.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://tamsar811.github.io/blog-ai-otomatis">
-    
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sakura.css/css/sakura.css" type="text/css">
+    <meta name="google-site-verification" content="1c725a095311279a" />
+    <title>TechVanguard AI - Masa Depan Teknologi</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #f4f7f6; max-width: 900px; line-height: 1.8; }
-        .card { background: white; padding: 40px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        h1 { color: #2c3e50; text-align: center; font-weight: 800; border-bottom: 4px solid #3498db; padding-bottom: 15px; }
-        footer { text-align: center; margin-top: 50px; padding: 20px; font-size: 0.9em; color: #7f8c8d; border-top: 1px solid #ddd; }
-        img { max-width: 100%; height: auto; border-radius: 12px; }
+        body { font-family: 'Space Grotesk', sans-serif; background-color: #0f172a; color: #f8fafc; }
+        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        .gradient-text { background: linear-gradient(90deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .card-hover:hover { transform: translateY(-5px); transition: all 0.3s ease; border-color: #38bdf8; }
     </style>
 </head>
-<body>
-    <header>
-        <h1>TECHVANGUARD AI</h1>
-        <p style="text-align:center; font-style:italic;">Wawasan Masa Depan, Ditulis Oleh Kecerdasan Buatan</p>
+<body class="min-h-screen">
+    <nav class="glass sticky top-0 z-50 p-4 mb-8">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold gradient-text">TECHVANGUARD AI</h1>
+            <div class="text-xs text-slate-400 uppercase tracking-widest">Update Otomatis Setiap Hari</div>
+        </div>
+    </nav>
+
+    <header class="container mx-auto px-4 mb-12 text-center">
+        <h2 class="text-4xl md:text-6xl font-bold mb-4">Navigasi di Era <span class="gradient-text">Kecerdasan Buatan</span></h2>
+        <p class="text-slate-400 max-w-2xl mx-auto">Wawasan mendalam tentang AI, teknologi masa depan, dan bagaimana dunia berubah dalam genggaman Anda.</p>
     </header>
 
-    <main class="card">
-        <article id="content">
-            <p>Menghubungkan ke pusat data... Artikel sedang dimuat...</p>
-        </article>
+    <main class="container mx-auto px-4 pb-20">
+        <div id="content" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            </div>
     </main>
 
-    <footer>
-        <p>© 2026 <b>TechVanguard AI</b> - Semua konten dibuat secara otomatis untuk tujuan edukasi teknologi.</p>
+    <footer class="border-t border-slate-800 py-8 text-center text-slate-500 text-sm">
+        &copy; 2026 TechVanguard AI. Powered by Gemini & GitHub.
     </footer>
 
     <script>
-        fetch('artikel/konten-terbaru.md')
-            .then(res => res.text())
-            .then(data => {
-                document.getElementById('content').innerHTML = data;
-            })
-            .catch(err => {
-                document.getElementById('content').innerHTML = "Gagal memuat konten. Pastikan robot sudah berjalan.";
-            });
+        async function loadContent() {
+            try {
+                const response = await fetch('https://raw.githubusercontent.com/tamsar811/blog-ai-otomatis/main/data.json');
+                const data = await response.json();
+                const contentDiv = document.getElementById('content');
+                
+                data.reverse().forEach(post => {
+                    const card = `
+                        <article class="glass p-6 rounded-2xl card-hover flex flex-col justify-between">
+                            <div>
+                                <div class="text-xs text-sky-400 mb-2">${post.date}</div>
+                                <h3 class="text-xl font-bold mb-3 leading-tight">${post.title}</h3>
+                                <p class="text-slate-400 text-sm line-clamp-3 mb-4">${post.content.substring(0, 150)}...</p>
+                            </div>
+                            <button class="w-full py-2 rounded-xl bg-slate-800 hover:bg-sky-600 transition-colors font-medium">Baca Selengkapnya</button>
+                        </article>
+                    `;
+                    contentDiv.innerHTML += card;
+                });
+            } catch (error) {
+                console.error('Gagal memuat konten:', error);
+            }
+        }
+        loadContent();
     </script>
 </body>
 </html>
+EOF
